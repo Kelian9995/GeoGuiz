@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">GeoQuiz</string>
+    <string name = "question_australia">Cenberra is the capital of Australia.</string>
+    <string name="question_oceans">The Pacific Ocean is larger than the Atlantic Ocean</string>
+    <string name="question_mideast">The Suez Canal connect the RED Sea and the Indian Ocean</string>
+    <string name="question_africa">The cource of the Nile River is in Egypt</string>
+    <string name="question_americans">The Amazon River is the langest rivaer in the Americas</string>
+    <string name="question_asia">Lake Baikal is the world\'s olddest and deepest freshwater lake</string>
+    <string name="true_button">True</string>
+    <string name="false_button">False</string>
+    <string name="next_button">Next</string>
+<string name = "correct_toast">Correct!</string>
+    <string name="incorrect_toast">Incorrect!</string>
+
+</resources>
