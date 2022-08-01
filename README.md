@@ -1,1 +1,1 @@
-# GeoGuiz
+# GeoQuiz
