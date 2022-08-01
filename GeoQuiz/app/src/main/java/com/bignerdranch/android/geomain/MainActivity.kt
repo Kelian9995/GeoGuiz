@@ -9,8 +9,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView
 import android.widget.Toast
-
+import android.util.Log
+private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
+
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
     private lateinit var nextButton: ImageButton
@@ -24,16 +26,24 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_americans,true),
         Question(R.string.question_asia,true))
     private var currentIndex = 0
+    private var currentScore = 0.0
+    private var lockedQuestion = mutableListOf<Int>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "onCreate(Bundle?) called")
+
         setContentView(R.layout.activity_main)
 
         trueButton =
             findViewById(R.id.true_button)
         trueButton.setOnClickListener { view: View ->
+            lockedQuestion.add(currentIndex)
           checkAnswer(true)
+            disableButtons()
         }
         falseButton =
             findViewById(R.id.false_button)
@@ -42,12 +52,16 @@ class MainActivity : AppCompatActivity() {
         prevButton = findViewById(R.id.prev_button)
         questionTextView = findViewById(R.id.question_text_view)
         falseButton.setOnClickListener { view: View ->
-           checkAnswer(false)
+            lockedQuestion.add(currentIndex)
+            checkAnswer(false)
+            disableButtons()
+
         }
         nextButton.setOnClickListener {
             currentIndex = (currentIndex + 1) %
                     questionBank.size
             updateQuestion()
+            disableButtons()
         }
         prevButton.setOnClickListener {
             if (currentIndex > 0) {
@@ -57,14 +71,39 @@ class MainActivity : AppCompatActivity() {
                 currentIndex = questionBank.size - 1
                 updateQuestion()
             }
+            disableButtons()
         }
 
         questionTextView.setOnClickListener {
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
         }
+        updateQuestion()
+        disableButtons()
 
         }
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG,"onStart() called")
+    }
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG,"onResume() called")
+    }
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG,"onPause() called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop() called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG,"onDestroy() called")
+    }
     private fun updateQuestion() {
 
 
@@ -74,12 +113,32 @@ class MainActivity : AppCompatActivity() {
     }
     private fun checkAnswer(userAnswer:Boolean) {
         val correctAnswer = questionBank[currentIndex].answer
-        val messageResId = if (userAnswer == correctAnswer) {
-            R.string.correct_toast
+        val messageResId: Int
+        if (userAnswer == correctAnswer) {
+            messageResId = R.string.correct_toast
+            currentScore++
         } else {
-            R.string.incorrect_toast
+            messageResId = R.string.incorrect_toast
         }
-        Toast.makeText(this, messageResId,Toast.LENGTH_SHORT)
+        if (questionBank.size == lockedQuestion.size) {
+            Toast.makeText(
+                this, "${(currentScore / questionBank.size * 100).toInt()}%"
+          ,
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            Toast.makeText(this, messageResId,Toast.LENGTH_SHORT)
         .show()
+    }
+}
+    private fun disableButtons() {
+      if(lockedQuestion.contains(currentIndex)) {
+          trueButton.isEnabled = false
+          falseButton.isEnabled = false
+      } else {
+          trueButton.isEnabled = true
+          falseButton.isEnabled = true
+      }
+
     }
 }
