@@ -1,4 +1,4 @@
-package com.bignerdranch.android.geomain
+package com.bignerdranch.android.geoquiz
 
 import org.junit.Test
 
